@@ -15,19 +15,35 @@ internal enum HTTPRouter: URLRequestConvertible {
     static let baseURL = "https://staging.triggerfinance.com/"
     static var URLRequest: NSMutableURLRequest = NSMutableURLRequest(URL: NSURL(string: "")!)
     
-    // Authentication
+    // MARK: Authentication Routes
     case Authenticate(clientToken: String, uniqueIdentifier: String) // Authentication
+    
+    // MARK: Trigger Routes
+    case GetPresetTriggers(symbols: [String]) // Gets all preset Triggers for symbols
+    case UpdatePresetTrigger(symbol: String) // Updates a preset Trigger
     
     var URLRequest: NSMutableURLRequest {
         let (method, path, parameters, encoding): (Alamofire.Method, String, [String: AnyObject]?, Alamofire.ParameterEncoding) = {
             switch self {
                 
-            // MARK: Authentication API calls
+            // MARK: Authentication API Settings
             case .Authenticate(let clientID, let userID):
                 let params = ["token": clientID, "identifier_in_client": userID]
                 let method = Alamofire.Method.POST
                 let encoding = Alamofire.ParameterEncoding.JSON
                 return (method, "v1/authenticate", params, encoding)
+                
+            // MARK: Trigger API Settings
+            case .GetPresetTriggers(let symbols):
+                let params = ["symbols": symbols.joinWithSeparator(",")]
+                let method = Alamofire.Method.GET
+                let encoding = Alamofire.ParameterEncoding.URL
+                return (method, "v1/triggers/predefined/", params, encoding)
+                
+            case .UpdatePresetTrigger(let symbol):
+                let method = Alamofire.Method.POST
+                let encoding = Alamofire.ParameterEncoding.JSON
+                return (method, "v1/triggers/predefined/\(symbol)", nil, encoding)
                 
             } // Add more cases here
         }()
@@ -48,7 +64,7 @@ internal enum HTTPRouter: URLRequestConvertible {
         
         // Sets HTTP method
         URLRequest.HTTPMethod = method.rawValue
-        
+        print("Token: \(URLRequest.valueForHTTPHeaderField("Authorization"))")
         // Encodes request
         return encoding.encode(URLRequest, parameters: parameters).0
     }

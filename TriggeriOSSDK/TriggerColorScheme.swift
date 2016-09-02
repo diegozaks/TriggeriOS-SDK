@@ -8,7 +8,7 @@
 
 import UIKit
 
-enum TriggerColorScheme
+public enum TriggerColorScheme
 {
     case Light
     case Dark

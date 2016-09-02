@@ -32,17 +32,16 @@ public class TriggerSDK
     private init() {}
     
     // properties
-    var colorScheme: TriggerColorScheme = TriggerColorScheme.Light // default
-    var delegate: TriggerSDKDelegate?
+    public var colorScheme: TriggerColorScheme = TriggerColorScheme.Light // default
+    public var delegate: TriggerSDKDelegate?
     
     // optional configuration options
-    var smallFont: UIFont?
-    var mediumFont: UIFont?
-    var largeFont: UIFont?
-    var fontColor: UIColor?
-    var backgroundColor: UIColor?
-    var loggingOn: Bool = true
-    
+    public var smallFont: UIFont?
+    public var mediumFont: UIFont?
+    public var largeFont: UIFont?
+    public var fontColor: UIColor?
+    public var backgroundColor: UIColor?
+    public var loggingOn: Bool = true
     
     
     // MARK: Sets Credentials
@@ -84,10 +83,20 @@ public class TriggerSDK
     
     public func getTriggers(forSymbols symbols: [String], completionHandler: ([Trigger] -> ()))
     {
-        let result: [Trigger] = []
+        if symbols.count == 0
+        {
+            self.log("In getTriggers: No symbols passed in")
+            return
+        }
         
-        self.delegate?.didGetTriggers(forSymbols: symbols, triggers: result)
-        completionHandler(result)
+        HTTPService.getPresetTriggersBySymbols(symbols, callback: { response in
+            self.delegate?.didGetTriggers(forSymbols: symbols, triggers: response)
+            completionHandler(response)
+        })
+        
+        HTTPService.allTriggers { response in
+            print("YAHOOOO")
+        }
     }
     
     // MARK: Activating Triggers
@@ -113,7 +122,7 @@ public class TriggerSDK
     }
     
     // MARK: Logging
-    private func log(message: String)
+    func log(message: String)
     {
         if self.loggingOn
         {

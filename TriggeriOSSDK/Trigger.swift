@@ -11,20 +11,31 @@ import SwiftyJSON
 
 public class Trigger
 {
-    
     // MARK: Properties
-    var isOn: Bool? {
+    public var isOn: Bool? {
         didSet {
             print("Setting Trigger state")
         }
     }
-    var fullDescription: String?
-    var symbol: String?
-    var fullName: String?
+    public var fullDescription: String?
+    public var symbol: String?
+    var internalName: String?
     
-    public init(json: JSON)
+    init(json: JSON)
     {
-        
+        self.fullDescription = json[JSONKeys.NameInClient.rawValue].string
+        self.symbol = json[JSONKeys.Symbol.rawValue].string
+        self.isOn = json[JSONKeys.EnabledForUsers.rawValue].bool
+        self.internalName = json[JSONKeys.Name.rawValue].string
+    }
+    
+    // Keys for parsing JSON blobs
+    enum JSONKeys: String
+    {
+        case NameInClient = "name_in_client"
+        case Name = "name"
+        case EnabledForUsers = "enabled_for_users"
+        case Symbol = "symbol"
     }
     
 }
