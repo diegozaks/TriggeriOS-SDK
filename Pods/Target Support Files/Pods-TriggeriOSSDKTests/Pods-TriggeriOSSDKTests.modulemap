@@ -1,0 +1,6 @@
+framework module Pods_TriggeriOSSDKTests {
+  umbrella header "Pods-TriggeriOSSDKTests-umbrella.h"
+
+  export *
+  module * { export * }
+}

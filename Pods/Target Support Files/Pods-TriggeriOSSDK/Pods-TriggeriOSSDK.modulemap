@@ -1,0 +1,6 @@
+framework module Pods_TriggeriOSSDK {
+  umbrella header "Pods-TriggeriOSSDK-umbrella.h"
+
+  export *
+  module * { export * }
+}

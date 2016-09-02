@@ -1,0 +1,21 @@
+PODS:
+  - Alamofire (3.4.0)
+  - KeychainAccess (2.3.5)
+  - SnapKit (0.21.0)
+  - SwiftyJSON (2.3.2)
+
+DEPENDENCIES:
+  - Alamofire (= 3.4.0)
+  - KeychainAccess (= 2.3.5)
+  - SnapKit (= 0.21.0)
+  - SwiftyJSON (= 2.3.2)
+
+SPEC CHECKSUMS:
+  Alamofire: c19a627cefd6a95f840401c49ab1f124e07f54ee
+  KeychainAccess: e283c1981a6c5655e1984cd411c6faf16fa165ae
+  SnapKit: 2756fe24b706367af224c9c508d2f9166d03354c
+  SwiftyJSON: 04ccea08915aa0109039157c7974cf0298da292a
+
+PODFILE CHECKSUM: 1f5f72e958744a46f2014bb64112e8cd5a9d274d
+
+COCOAPODS: 1.0.0
