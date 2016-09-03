@@ -57,4 +57,27 @@ internal class HTTPService
         }
     }
     
+    static func updatePresetTrigger(trigger: Trigger, callback: Trigger? -> ())
+    {
+        guard let symbol = trigger.symbol else {
+            return
+        }
+        
+        Alamofire.request(HTTPRouter.UpdatePresetTrigger(symbol: symbol)).validate().responseJSON() { response in
+            if response.response == nil { return }
+            
+            switch response.result {
+            case .Success(let value):
+                let json = JSON(value)
+                print("JSON: \(json)")
+                callback(trigger)
+                
+            case .Failure(_):
+                callback(nil)
+            }
+        }
+        
+        
+    }
+    
 }

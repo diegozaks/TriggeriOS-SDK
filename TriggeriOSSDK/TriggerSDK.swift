@@ -25,7 +25,7 @@ public extension TriggerSDKDelegate
     func triggerUpdated(trigger: Trigger) {}
 }
 
-public class TriggerSDK
+public class TriggerSDK: TriggerTableViewCellDelegate
 {
     // singleton
     public static let sharedInstance = TriggerSDK()
@@ -88,15 +88,11 @@ public class TriggerSDK
             self.log("In getTriggers: No symbols passed in")
             return
         }
-        
         HTTPService.getPresetTriggersBySymbols(symbols, callback: { response in
+            
             self.delegate?.didGetTriggers(forSymbols: symbols, triggers: response)
             completionHandler(response)
         })
-        
-        HTTPService.allTriggers { response in
-            print("YAHOOOO")
-        }
     }
     
     // MARK: Activating Triggers
@@ -127,6 +123,17 @@ public class TriggerSDK
         if self.loggingOn
         {
             print("TriggerSDK: \(message)")
+        }
+    }
+    
+    // MARK: Trigger TableView Cell Delegate
+    func triggerWasToggled(trigger: Trigger)
+    {
+        HTTPService.updatePresetTrigger(trigger) { updatedTrigger in
+            if let triggerWasUpdated = updatedTrigger
+            {
+                self.delegate?.triggerUpdated(triggerWasUpdated)
+            }
         }
     }
     

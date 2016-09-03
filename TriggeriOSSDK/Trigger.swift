@@ -29,6 +29,8 @@ public class Trigger
         self.internalName = json[JSONKeys.Name.rawValue].string
     }
     
+    public init() {}
+    
     // Keys for parsing JSON blobs
     enum JSONKeys: String
     {

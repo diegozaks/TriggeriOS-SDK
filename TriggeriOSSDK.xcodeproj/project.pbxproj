@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		2BE18AB57F8E2E35D44D3201 /* Pods_TriggeriOSSDKTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EAA5E0B3CF4BA9B5FEE6203 /* Pods_TriggeriOSSDKTests.framework */; };
+		3A5E8CC21D7A29C500C28759 /* TriggerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A5E8CC11D7A29C500C28759 /* TriggerViewController.swift */; };
+		3A5E8CC41D7A2A0A00C28759 /* TriggerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A5E8CC31D7A2A0A00C28759 /* TriggerTableViewCell.swift */; };
+		3A5E8CC61D7A2D4200C28759 /* UIColor+Trigger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A5E8CC51D7A2D4200C28759 /* UIColor+Trigger.swift */; };
 		3A62B6A91D78EBB1009E9594 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A62B6A81D78EBB1009E9594 /* Alamofire.framework */; };
 		3AD156761D79C65D0020EEBC /* HTTPRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AD156741D79C65D0020EEBC /* HTTPRouter.swift */; };
 		3AD156771D79C65D0020EEBC /* HTTPService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AD156751D79C65D0020EEBC /* HTTPService.swift */; };
@@ -37,6 +40,9 @@
 		0CB53CDEC392AE0E07D7EA6E /* Pods-TriggeriOSSDKTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TriggeriOSSDKTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-TriggeriOSSDKTests/Pods-TriggeriOSSDKTests.release.xcconfig"; sourceTree = "<group>"; };
 		1E472821BB6ADE04FA5159F6 /* Pods-TriggeriOSSDK.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TriggeriOSSDK.release.xcconfig"; path = "Pods/Target Support Files/Pods-TriggeriOSSDK/Pods-TriggeriOSSDK.release.xcconfig"; sourceTree = "<group>"; };
 		2EAA5E0B3CF4BA9B5FEE6203 /* Pods_TriggeriOSSDKTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TriggeriOSSDKTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3A5E8CC11D7A29C500C28759 /* TriggerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TriggerViewController.swift; sourceTree = "<group>"; };
+		3A5E8CC31D7A2A0A00C28759 /* TriggerTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TriggerTableViewCell.swift; sourceTree = "<group>"; };
+		3A5E8CC51D7A2D4200C28759 /* UIColor+Trigger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+Trigger.swift"; sourceTree = "<group>"; };
 		3A62B6A81D78EBB1009E9594 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = "../../../Library/Developer/Xcode/DerivedData/TriggeriOSSDK-ghartdfovnoieqhhnyhivthbxvpv/Build/Products/Debug-iphonesimulator/Alamofire/Alamofire.framework"; sourceTree = "<group>"; };
 		3AD156741D79C65D0020EEBC /* HTTPRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPRouter.swift; sourceTree = "<group>"; };
 		3AD156751D79C65D0020EEBC /* HTTPService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPService.swift; sourceTree = "<group>"; };
@@ -75,6 +81,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3A5E8CC01D7A29B200C28759 /* HTTP */ = {
+			isa = PBXGroup;
+			children = (
+				3AD156741D79C65D0020EEBC /* HTTPRouter.swift */,
+				3AD156751D79C65D0020EEBC /* HTTPService.swift */,
+			);
+			name = HTTP;
+			sourceTree = "<group>";
+		};
 		3AFDD6371D78E71B000B7C30 = {
 			isa = PBXGroup;
 			children = (
@@ -100,12 +115,14 @@
 			children = (
 				3AFDD6441D78E71B000B7C30 /* TriggeriOSSDK.h */,
 				3AFDD6461D78E71B000B7C30 /* Info.plist */,
-				3AD156741D79C65D0020EEBC /* HTTPRouter.swift */,
-				3AD156751D79C65D0020EEBC /* HTTPService.swift */,
+				3A5E8CC01D7A29B200C28759 /* HTTP */,
 				3AD156781D79C6ED0020EEBC /* Session.swift */,
 				3AD1567A1D79C70B0020EEBC /* Trigger.swift */,
 				3AD1567C1D79C7240020EEBC /* TriggerColorScheme.swift */,
 				3AD1567E1D79C7440020EEBC /* TriggerSDK.swift */,
+				3A5E8CC11D7A29C500C28759 /* TriggerViewController.swift */,
+				3A5E8CC31D7A2A0A00C28759 /* TriggerTableViewCell.swift */,
+				3A5E8CC51D7A2D4200C28759 /* UIColor+Trigger.swift */,
 			);
 			path = TriggeriOSSDK;
 			sourceTree = "<group>";
@@ -335,8 +352,11 @@
 				3AD1567F1D79C7440020EEBC /* TriggerSDK.swift in Sources */,
 				3AD1567D1D79C7240020EEBC /* TriggerColorScheme.swift in Sources */,
 				3AD156771D79C65D0020EEBC /* HTTPService.swift in Sources */,
+				3A5E8CC41D7A2A0A00C28759 /* TriggerTableViewCell.swift in Sources */,
 				3AD156761D79C65D0020EEBC /* HTTPRouter.swift in Sources */,
 				3AD156791D79C6ED0020EEBC /* Session.swift in Sources */,
+				3A5E8CC61D7A2D4200C28759 /* UIColor+Trigger.swift in Sources */,
+				3A5E8CC21D7A29C500C28759 /* TriggerViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
