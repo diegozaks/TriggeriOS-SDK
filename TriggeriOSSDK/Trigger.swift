@@ -31,6 +31,11 @@ public class Trigger
     
     public init() {}
     
+    public func saveChanges()
+    {
+        HTTPService.updatePresetTrigger(self, callback: nil)
+    }
+    
     // Keys for parsing JSON blobs
     enum JSONKeys: String
     {

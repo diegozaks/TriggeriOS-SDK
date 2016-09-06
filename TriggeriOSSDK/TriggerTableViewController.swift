@@ -23,6 +23,13 @@ public class TriggerTableViewController: UIViewController, UITableViewDelegate, 
             self.setNavigationTitle()
         }
     }
+
+    let defaultBackgroundColor = TriggerSDK.sharedInstance.propertyForConfigurationOption(TriggerSDK.ConfigurationOptions.DefaultBackgroundColor) as! UIColor
+    let defaultTextColor = TriggerSDK.sharedInstance.propertyForConfigurationOption(TriggerSDK.ConfigurationOptions.DefaultFontColor) as! UIColor
+    let defaultAccentTextColor = TriggerSDK.sharedInstance.propertyForConfigurationOption(TriggerSDK.ConfigurationOptions.DefaultAccentTextColor) as! UIColor
+    let defaultBorderColor = TriggerSDK.sharedInstance.propertyForConfigurationOption(TriggerSDK.ConfigurationOptions.DefaultBorderColor) as! UIColor
+    let defaultNavbarColor = TriggerSDK.sharedInstance.propertyForConfigurationOption(TriggerSDK.ConfigurationOptions.DefaultNavigationBarBackgroundColor) as? UIColor
+    
     var hasSetHeaderView: Bool = false
     let triggerCellIdentifier = "triggerCell"
     var numberOfSections: Int {
@@ -111,12 +118,20 @@ public class TriggerTableViewController: UIViewController, UITableViewDelegate, 
         button.titleLabel?.font = UIFont.systemFontOfSize(16)
         button.titleLabel?.adjustsFontSizeToFitWidth = true
         button.titleLabel?.textAlignment = .Left
-        button.setTitleColor(UIColor.TriggerBlack(), forState: UIControlState.Normal)
+        button.setTitleColor(self.defaultAccentTextColor, forState: UIControlState.Normal)
         button.addTarget(self, action: #selector(TriggerTableViewController.dismissViewController), forControlEvents: UIControlEvents.TouchUpInside)
         button.contentEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 0)
         
         let barButton = UIBarButtonItem(customView: button)
         self.navigationItem.leftBarButtonItem = barButton
+        
+        if let navVC = self.navigationController
+        {
+            navVC.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: self.defaultAccentTextColor]
+            navVC.navigationBar.barTintColor = self.defaultNavbarColor
+            navVC.navigationBar.backgroundColor = UIColor.clearColor()
+            navVC.navigationBar.translucent = TriggerSDK.sharedInstance.colorScheme.returnNavbarIsTranslucent()
+        }
     }
     
     func setNavigationTitle()
@@ -157,7 +172,7 @@ public class TriggerTableViewController: UIViewController, UITableViewDelegate, 
         self.tableView!.registerClass(TriggerTableViewCell.self, forCellReuseIdentifier: self.triggerCellIdentifier)
         self.tableView!.rowHeight = UITableViewAutomaticDimension
         self.tableView!.estimatedRowHeight = 80
-        self.tableView!.backgroundColor = UIColor.TriggerWhite()
+        self.tableView!.backgroundColor = self.defaultBackgroundColor
         self.tableView!.separatorStyle = .None
     }
     
@@ -199,7 +214,7 @@ public class TriggerTableViewController: UIViewController, UITableViewDelegate, 
             }
             
             label.adjustsFontSizeToFitWidth = true
-            label.textColor = UIColor.TriggerBlack()
+            label.textColor = self.defaultAccentTextColor
             if self.returnSections().count > 1
             {
                 label.text = ticker.uppercaseString
@@ -213,7 +228,7 @@ public class TriggerTableViewController: UIViewController, UITableViewDelegate, 
             }
             
             let bottomBorder = UIView()
-            bottomBorder.backgroundColor = UIColor.TriggerLightGray()
+            bottomBorder.backgroundColor = self.defaultBackgroundColor
             container.addSubview(bottomBorder)
             bottomBorder.snp_makeConstraints { (make) -> Void in
                 make.left.equalTo(container).offset(5)

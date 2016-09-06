@@ -57,7 +57,7 @@ internal class HTTPService
         }
     }
     
-    static func updatePresetTrigger(trigger: Trigger, callback: Trigger? -> ())
+    static func updatePresetTrigger(trigger: Trigger, callback: (Trigger? -> ())?)
     {
         guard let symbol = trigger.symbol, let isOn = trigger.isOn, let name = trigger.internalName, let nameInClient = trigger.fullDescription else {
             return
@@ -69,14 +69,18 @@ internal class HTTPService
             switch response.result {
             case .Success(let value):
                 let json = JSON(value)
-                callback(trigger)
+                if let hasACallback = callback
+                {
+                    hasACallback(trigger)
+                }
                 
             case .Failure(_):
-                callback(nil)
+                if let hasACallback = callback
+                {
+                    hasACallback(nil)
+                }
             }
         }
-        
-        
     }
     
 }

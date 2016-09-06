@@ -17,19 +17,41 @@ public protocol TriggerSDKDelegate
     func triggerUpdated(trigger: Trigger)
     
     // view display
-    func willDisplayCustomNavigationView() -> UIView?
-    func willDisplayCustomCellForTrigger(forTrigger trigger: Trigger) -> UITableViewCell?
 }
 
 public extension TriggerSDKDelegate
 {
     func willDisplayTriggers(forSymbols symbols: [String]) {}
     func didDisplayTriggers(forSymbols symbols: [String]) {}
+    
     func didGetTriggers(forSymbols symbols: [String], triggers: [Trigger]) {}
     func triggerUpdated(trigger: Trigger) {}
-    
-    func willDisplayCustomNavigationView() -> UIView? { return nil }
-    func willDisplayCustomCellForTrigger(forTrigger trigger: Trigger) -> UITableViewCell? { return nil}
+}
+
+extension TriggerSDK
+{
+    public enum ConfigurationOptions: String, Hashable
+    {
+        case DefaultFontColor = "TriggerSDKDefaultFontColor"
+        case DefaultAccentTextColor = "TriggerSDKDefaultAccentTextColor"
+        case DefaultBackgroundColor = "TriggerSDKDefaultBackgroundColor"
+        case DefaultBorderColor = "TriggerSDKDefaultBorderColor"
+        case DefaultNavigationBarBackgroundColor = "TriggerSDKDefaultNavigationBarBackgroundColor"
+        
+        func validate(againstValue value: AnyObject)
+        {
+            switch self {
+            case .DefaultFontColor,.DefaultAccentTextColor, .DefaultBackgroundColor, .DefaultBorderColor, .DefaultNavigationBarBackgroundColor:
+                if let _ = value as? UIColor
+                {
+                    return
+                }
+            }
+            
+            fatalError("Wrong value type supplied for configuration option: \(self.rawValue)")
+        }
+    }
+ 
 }
 
 public class TriggerSDK: TriggerTableViewCellDelegate
@@ -44,16 +66,18 @@ public class TriggerSDK: TriggerTableViewCellDelegate
     public var tableViewController: UITableViewController?
     
     // optional configuration options
-    public var smallFont: UIFont?
-    public var mediumFont: UIFont?
-    public var largeFont: UIFont?
-    public var fontColor: UIColor?
-    public var backgroundColor: UIColor?
     public var loggingOn: Bool = true
-    
+    public var configurationOptions: [TriggerSDK.ConfigurationOptions: AnyObject] = [:] {
+        didSet {
+            for (key, value) in self.configurationOptions
+            {
+                key.validate(againstValue: value)
+            }
+        }
+    }
     
     // MARK: Sets Credentials
-    public func setCredentials(apiToken: String, userIdentifier: String)
+    public func setCredentials(apiToken: String, userIdentifier: String, wasAuthenticated: (Bool -> ())? = nil)
     {
         /**
          Sets the API Token and the Unique User Identifier.
@@ -68,6 +92,11 @@ public class TriggerSDK: TriggerTableViewCellDelegate
         Session.setInSecureSession(SessionKey.UserIdentifier, value: userIdentifier)
         
         HTTPService.authenticate(apiToken, userID: userIdentifier, callback: { result in
+            if let authenticationCallback = wasAuthenticated
+            {
+                authenticationCallback(result)
+            }
+            
             if result
             {
                 self.log("Authenticated User Successfully")
@@ -78,6 +107,25 @@ public class TriggerSDK: TriggerTableViewCellDelegate
     }
     
     // MARK: Display Trigger View
+    public func displayTriggers(forSymbols symbols: [String], overViewController: UIViewController)
+    {
+        self.delegate?.willDisplayTriggers(forSymbols: symbols)
+        let vc = TriggerTableViewController(triggerTableViewCellDelegate: self)
+        let navVC = UINavigationController()
+        navVC.pushViewController(vc, animated: false)
+        
+        vc.modalTransitionStyle = .CoverVertical
+        vc.modalPresentationStyle = .CurrentContext
+        overViewController.definesPresentationContext = true
+        
+        HTTPService.getPresetTriggersBySymbols(symbols) { triggers in
+            vc.triggers = triggers
+            self.delegate?.didGetTriggers(forSymbols: symbols, triggers: triggers)
+            overViewController.presentViewController(navVC, animated: true, completion: nil)
+            self.delegate?.didDisplayTriggers(forSymbols: symbols)
+        }
+    }
+    
     public func displayTriggers(forSymbols symbols: [String], viewControllerToDisplay: (UIViewController -> ()))
     {
         self.delegate?.willDisplayTriggers(forSymbols: symbols)
@@ -86,30 +134,11 @@ public class TriggerSDK: TriggerTableViewCellDelegate
         navVC.pushViewController(vc, animated: false)
         
         HTTPService.getPresetTriggersBySymbols(symbols) { triggers in
+            self.delegate?.didGetTriggers(forSymbols: symbols, triggers: triggers)
             vc.triggers = triggers
         }
         
         viewControllerToDisplay(navVC)
-    }
-    
-    public func displayTriggers(forSymbols symbols: [String], overViewController: UIViewController, onAnimationCompletion: () -> ())
-    {
-        self.delegate?.willDisplayTriggers(forSymbols: symbols)
-        let vc = TriggerTableViewController(triggerTableViewCellDelegate: self)
-        let navVC = UINavigationController()
-        navVC.pushViewController(vc, animated: false)
-        
-        HTTPService.getPresetTriggersBySymbols(symbols) { triggers in
-            vc.triggers = triggers
-        }
-        
-        vc.modalTransitionStyle = .CoverVertical
-        vc.modalPresentationStyle = .CurrentContext
-        overViewController.definesPresentationContext = true
-        
-        overViewController.presentViewController(navVC, animated: true, completion: {
-            onAnimationCompletion()
-        })
     }
     
     public func returnSubviewWithTriggers(forSymbols symbols: [String]) -> UIView
@@ -124,33 +153,33 @@ public class TriggerSDK: TriggerTableViewCellDelegate
             self.log("In getTriggers: No symbols passed in")
             return
         }
+        
         HTTPService.getPresetTriggersBySymbols(symbols, callback: { response in
-            
             self.delegate?.didGetTriggers(forSymbols: symbols, triggers: response)
             completionHandler(response)
         })
     }
     
     // MARK: Activating Triggers
-    public func activateAllTriggers(forSymbols symbols: [String])
+    func activateAllTriggers(forSymbols symbols: [String])
     {
-        
+        fatalError()
     }
     
-    public func activateAllTriggers(forSymbol symbol: String)
+    func activateAllTriggers(forSymbol symbol: String)
     {
-        
+        fatalError()
     }
     
     // MARK: Deactivating Triggers
-    public func deactivateAllTriggers(forSymbols symbols: [String])
+    func deactivateAllTriggers(forSymbols symbols: [String])
     {
-        
+        fatalError()
     }
     
-    public func deactivateAllTriggers(forSymbol symbol: String)
+    func deactivateAllTriggers(forSymbol symbol: String)
     {
-        
+        fatalError()
     }
     
     // MARK: Logging
@@ -170,6 +199,16 @@ public class TriggerSDK: TriggerTableViewCellDelegate
             {
                 self.delegate?.triggerUpdated(triggerWasUpdated)
             }
+        }
+    }
+    
+    internal func propertyForConfigurationOption(option: TriggerSDK.ConfigurationOptions) -> AnyObject?
+    {
+        if let hasACustomValue = self.configurationOptions[option]
+        {
+            return hasACustomValue
+        } else {
+            return self.colorScheme.returnValueForProperty(option)
         }
     }
     

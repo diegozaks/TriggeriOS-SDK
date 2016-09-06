@@ -22,6 +22,9 @@ class TriggerTableViewCell: UITableViewCell {
     weak var label: UILabel?
     weak var triggerControl: UISwitch?
     
+    let defaultBackgroundColor = TriggerSDK.sharedInstance.propertyForConfigurationOption(TriggerSDK.ConfigurationOptions.DefaultBackgroundColor) as! UIColor
+    let defaultBorderColor = TriggerSDK.sharedInstance.propertyForConfigurationOption(TriggerSDK.ConfigurationOptions.DefaultBorderColor) as! UIColor
+    let defaultTextColor = TriggerSDK.sharedInstance.propertyForConfigurationOption(TriggerSDK.ConfigurationOptions.DefaultFontColor) as! UIColor
     
     // MARK: Properties
     var trigger: Trigger? {
@@ -49,18 +52,18 @@ class TriggerTableViewCell: UITableViewCell {
     // MARK: Init Views
     private func initViews()
     {
-        self.contentView.backgroundColor = UIColor.TriggerWhite()
+        self.contentView.backgroundColor = self.defaultBackgroundColor
         self.selectionStyle = .None
         
         // bottom border
         let bottom = UIView()
-        bottom.backgroundColor = UIColor.TriggerLightGray()
+        bottom.backgroundColor = self.defaultBorderColor
         self.contentView.addSubview(bottom)
         self.bottomBorder = bottom
         
         // center text
         let label = UILabel()
-        label.textColor = UIColor.TriggerWarmGray()
+        label.textColor = self.defaultTextColor
         if #available(iOS 8.2, *) {
             label.font = UIFont.systemFontOfSize(16, weight: UIFontWeightLight)
         } else {
