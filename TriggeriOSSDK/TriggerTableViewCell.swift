@@ -22,8 +22,9 @@ class TriggerTableViewCell: UITableViewCell {
     weak var label: UILabel?
     weak var triggerControl: UISwitch?
     
+    
     // MARK: Properties
-    weak var trigger: Trigger? {
+    var trigger: Trigger? {
         didSet {
             if let isOn = self.trigger?.isOn
             {
@@ -48,14 +49,8 @@ class TriggerTableViewCell: UITableViewCell {
     // MARK: Init Views
     private func initViews()
     {
-        self.contentView.backgroundColor = UIColor.TriggerOffWhite()
+        self.contentView.backgroundColor = UIColor.TriggerWhite()
         self.selectionStyle = .None
-        
-        // bg
-        let bg = UIView()
-        bg.backgroundColor = UIColor.TriggerWhite()
-        self.contentView.addSubview(bg)
-        self.bg = bg
         
         // bottom border
         let bottom = UIView()
@@ -66,7 +61,13 @@ class TriggerTableViewCell: UITableViewCell {
         // center text
         let label = UILabel()
         label.textColor = UIColor.TriggerWarmGray()
-        label.font = UIFont.systemFontOfSize(16)
+        if #available(iOS 8.2, *) {
+            label.font = UIFont.systemFontOfSize(16, weight: UIFontWeightLight)
+        } else {
+            label.font = UIFont.systemFontOfSize(16)
+            // Fallback on earlier versions
+        }
+        
         self.contentView.addSubview(label)
         self.label = label
         
@@ -80,28 +81,23 @@ class TriggerTableViewCell: UITableViewCell {
     // MARK: Init Constraints 
     private func initConstraints()
     {
-        self.bg?.snp_makeConstraints { (make) -> Void in
-            make.left.equalTo(self.contentView).offset(15)
-            make.right.equalTo(self.contentView).offset(15)
-            make.top.equalTo(self.contentView)
-            make.bottom.equalTo(self.contentView)
-        }
         
         self.bottomBorder?.snp_makeConstraints { (make) -> Void in
-            make.bottom.equalTo(self.bg!)
+            make.bottom.equalTo(self.contentView)
             make.height.equalTo(1)
-            make.left.right.equalTo(self.bg!)
+            make.left.equalTo(self.contentView).offset(5)
+            make.right.equalTo(self.contentView).offset(-5)
         }
         
         self.label?.snp_makeConstraints { (make) -> Void in
             make.left.equalTo(self.contentView).offset(25)
-            make.top.equalTo(self.bg!).offset(15)
-            make.bottom.equalTo(self.bg!).offset(-15)
+            make.top.equalTo(self.contentView).offset(20)
+            make.bottom.equalTo(self.contentView).offset(-20)
             make.right.lessThanOrEqualTo(self.triggerControl!.snp_left).offset(-5)
         }
         
         self.triggerControl?.snp_makeConstraints { (make) -> Void in
-            make.right.equalTo(self.contentView).offset(-15)
+            make.right.equalTo(self.contentView).offset(-25)
             make.centerY.equalTo(self.contentView)
         }
     }

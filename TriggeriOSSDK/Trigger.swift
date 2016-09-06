@@ -36,7 +36,7 @@ public class Trigger
     {
         case NameInClient = "name_in_client"
         case Name = "name"
-        case EnabledForUsers = "enabled_for_users"
+        case EnabledForUsers = "enabled_for_user"
         case Symbol = "symbol"
     }
     

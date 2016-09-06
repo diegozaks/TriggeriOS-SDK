@@ -20,7 +20,7 @@ internal enum HTTPRouter: URLRequestConvertible {
     
     // MARK: Trigger Routes
     case GetPresetTriggers(symbols: [String]) // Gets all preset Triggers for symbols
-    case UpdatePresetTrigger(symbol: String) // Updates a preset Trigger
+    case UpdatePresetTrigger(symbol: String, isOn: Bool, name: String, nameInClient: String) // Updates a preset Trigger
     
     var URLRequest: NSMutableURLRequest {
         let (method, path, parameters, encoding): (Alamofire.Method, String, [String: AnyObject]?, Alamofire.ParameterEncoding) = {
@@ -40,10 +40,11 @@ internal enum HTTPRouter: URLRequestConvertible {
                 let encoding = Alamofire.ParameterEncoding.URL
                 return (method, "v1/triggers/predefined/", params, encoding)
                 
-            case .UpdatePresetTrigger(let symbol):
+            case .UpdatePresetTrigger(let symbol, let isOn, let name, let nameInClient):
                 let method = Alamofire.Method.POST
+                let params = ["name": name, "enabled_for_user": isOn, "name_in_client": nameInClient]
                 let encoding = Alamofire.ParameterEncoding.JSON
-                return (method, "v1/triggers/predefined/\(symbol)", nil, encoding)
+                return (method, "v1/triggers/predefined/\(symbol)", params as? [String : AnyObject], encoding)
                 
             } // Add more cases here
         }()
@@ -64,7 +65,6 @@ internal enum HTTPRouter: URLRequestConvertible {
         
         // Sets HTTP method
         URLRequest.HTTPMethod = method.rawValue
-        print("Token: \(URLRequest.valueForHTTPHeaderField("Authorization"))")
         // Encodes request
         return encoding.encode(URLRequest, parameters: parameters).0
     }

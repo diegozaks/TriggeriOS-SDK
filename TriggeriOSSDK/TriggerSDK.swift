@@ -6,7 +6,7 @@
 //  Copyright © 2016 Trigger Finance, Inc. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 
 public protocol TriggerSDKDelegate
@@ -15,6 +15,10 @@ public protocol TriggerSDKDelegate
     func didDisplayTriggers(forSymbols symbols: [String])
     func didGetTriggers(forSymbols symbols: [String], triggers: [Trigger])
     func triggerUpdated(trigger: Trigger)
+    
+    // view display
+    func willDisplayCustomNavigationView() -> UIView?
+    func willDisplayCustomCellForTrigger(forTrigger trigger: Trigger) -> UITableViewCell?
 }
 
 public extension TriggerSDKDelegate
@@ -23,6 +27,9 @@ public extension TriggerSDKDelegate
     func didDisplayTriggers(forSymbols symbols: [String]) {}
     func didGetTriggers(forSymbols symbols: [String], triggers: [Trigger]) {}
     func triggerUpdated(trigger: Trigger) {}
+    
+    func willDisplayCustomNavigationView() -> UIView? { return nil }
+    func willDisplayCustomCellForTrigger(forTrigger trigger: Trigger) -> UITableViewCell? { return nil}
 }
 
 public class TriggerSDK: TriggerTableViewCellDelegate
@@ -34,6 +41,7 @@ public class TriggerSDK: TriggerTableViewCellDelegate
     // properties
     public var colorScheme: TriggerColorScheme = TriggerColorScheme.Light // default
     public var delegate: TriggerSDKDelegate?
+    public var tableViewController: UITableViewController?
     
     // optional configuration options
     public var smallFont: UIFont?
@@ -70,10 +78,38 @@ public class TriggerSDK: TriggerTableViewCellDelegate
     }
     
     // MARK: Display Trigger View
-    public func displayTriggers(forSymbols symbols: [String])
+    public func displayTriggers(forSymbols symbols: [String], viewControllerToDisplay: (UIViewController -> ()))
     {
         self.delegate?.willDisplayTriggers(forSymbols: symbols)
+        let vc = TriggerTableViewController(triggerTableViewCellDelegate: self)
+        let navVC = UINavigationController()
+        navVC.pushViewController(vc, animated: false)
         
+        HTTPService.getPresetTriggersBySymbols(symbols) { triggers in
+            vc.triggers = triggers
+        }
+        
+        viewControllerToDisplay(navVC)
+    }
+    
+    public func displayTriggers(forSymbols symbols: [String], overViewController: UIViewController, onAnimationCompletion: () -> ())
+    {
+        self.delegate?.willDisplayTriggers(forSymbols: symbols)
+        let vc = TriggerTableViewController(triggerTableViewCellDelegate: self)
+        let navVC = UINavigationController()
+        navVC.pushViewController(vc, animated: false)
+        
+        HTTPService.getPresetTriggersBySymbols(symbols) { triggers in
+            vc.triggers = triggers
+        }
+        
+        vc.modalTransitionStyle = .CoverVertical
+        vc.modalPresentationStyle = .CurrentContext
+        overViewController.definesPresentationContext = true
+        
+        overViewController.presentViewController(navVC, animated: true, completion: {
+            onAnimationCompletion()
+        })
     }
     
     public func returnSubviewWithTriggers(forSymbols symbols: [String]) -> UIView
