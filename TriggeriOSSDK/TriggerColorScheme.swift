@@ -40,6 +40,19 @@ public enum TriggerColorScheme
             return nil
         case (.DefaultNavigationBarBackgroundColor, .Dark):
             return UIColor.TriggerBlack()
+            
+        case (.DefaultRegularFontType, .Light), (.DefaultRegularFontType, .Dark):
+            if #available(iOS 8.2, *) {
+                return UIFont.systemFontOfSize(16, weight: UIFontWeightLight)
+            } else {
+                return UIFont.systemFontOfSize(16)
+            }
+        case (.DefaultAccentFontType, .Light), (.DefaultAccentFontType, .Dark):
+            if #available(iOS 8.2, *) {
+                return UIFont.systemFontOfSize(20, weight: UIFontWeightBold)
+            } else {
+                return UIFont.boldSystemFontOfSize(20)
+            }
         }
     }
     

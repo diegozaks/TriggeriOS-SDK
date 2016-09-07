@@ -25,6 +25,7 @@ class TriggerTableViewCell: UITableViewCell {
     let defaultBackgroundColor = TriggerSDK.sharedInstance.propertyForConfigurationOption(TriggerSDK.ConfigurationOptions.DefaultBackgroundColor) as! UIColor
     let defaultBorderColor = TriggerSDK.sharedInstance.propertyForConfigurationOption(TriggerSDK.ConfigurationOptions.DefaultBorderColor) as! UIColor
     let defaultTextColor = TriggerSDK.sharedInstance.propertyForConfigurationOption(TriggerSDK.ConfigurationOptions.DefaultFontColor) as! UIColor
+    let defaultFontType = TriggerSDK.sharedInstance.propertyForConfigurationOption(TriggerSDK.ConfigurationOptions.DefaultRegularFontType) as! UIFont
     
     // MARK: Properties
     var trigger: Trigger? {
@@ -63,14 +64,9 @@ class TriggerTableViewCell: UITableViewCell {
         
         // center text
         let label = UILabel()
+        label.font = self.defaultFontType
         label.textColor = self.defaultTextColor
-        if #available(iOS 8.2, *) {
-            label.font = UIFont.systemFontOfSize(16, weight: UIFontWeightLight)
-        } else {
-            label.font = UIFont.systemFontOfSize(16)
-            // Fallback on earlier versions
-        }
-        
+        label.adjustsFontSizeToFitWidth = true
         self.contentView.addSubview(label)
         self.label = label
         

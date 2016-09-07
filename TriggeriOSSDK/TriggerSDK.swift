@@ -37,12 +37,20 @@ extension TriggerSDK
         case DefaultBackgroundColor = "TriggerSDKDefaultBackgroundColor"
         case DefaultBorderColor = "TriggerSDKDefaultBorderColor"
         case DefaultNavigationBarBackgroundColor = "TriggerSDKDefaultNavigationBarBackgroundColor"
+        case DefaultRegularFontType = "TriggerSDKDefaultTextFontType"
+        case DefaultAccentFontType = "TriggerSDKDefaultAccentFontType"
         
         func validate(againstValue value: AnyObject)
         {
             switch self {
             case .DefaultFontColor,.DefaultAccentTextColor, .DefaultBackgroundColor, .DefaultBorderColor, .DefaultNavigationBarBackgroundColor:
                 if let _ = value as? UIColor
+                {
+                    return
+                }
+
+            case .DefaultRegularFontType, .DefaultAccentFontType:
+                if let _ = value as? UIFont
                 {
                     return
                 }

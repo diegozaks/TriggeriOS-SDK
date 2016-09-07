@@ -30,6 +30,8 @@ public class TriggerTableViewController: UIViewController, UITableViewDelegate, 
     let defaultBorderColor = TriggerSDK.sharedInstance.propertyForConfigurationOption(TriggerSDK.ConfigurationOptions.DefaultBorderColor) as! UIColor
     let defaultNavbarColor = TriggerSDK.sharedInstance.propertyForConfigurationOption(TriggerSDK.ConfigurationOptions.DefaultNavigationBarBackgroundColor) as? UIColor
     
+    let headerFontType = TriggerSDK.sharedInstance.propertyForConfigurationOption(TriggerSDK.ConfigurationOptions.DefaultAccentFontType) as! UIFont
+    
     var hasSetHeaderView: Bool = false
     let triggerCellIdentifier = "triggerCell"
     var numberOfSections: Int {
@@ -206,13 +208,8 @@ public class TriggerTableViewController: UIViewController, UITableViewDelegate, 
         {
             let container = UIView()
             let label = UILabel()
-
-            if #available(iOS 8.2, *) {
-                label.font = UIFont.systemFontOfSize(20, weight: UIFontWeightBold)
-            } else {
-                label.font = UIFont.boldSystemFontOfSize(20)
-            }
             
+            label.font = self.headerFontType
             label.adjustsFontSizeToFitWidth = true
             label.textColor = self.defaultAccentTextColor
             if self.returnSections().count > 1
